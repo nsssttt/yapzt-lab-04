@@ -1,0 +1,15 @@
+@startuml
+[*] --> Draft
+Draft --> PendingPayment : submit nonempty cart
+PendingPayment --> Paid : payment approved
+PendingPayment --> PaymentFailed : payment declined
+PaymentFailed --> PendingPayment : retry payment
+PaymentFailed --> Cancelled : customer cancels
+Paid --> Processing : administrator confirms
+Processing --> Shipped : dispatch order
+Shipped --> Delivered : delivery confirmed
+Draft --> Cancelled : customer cancels
+PendingPayment --> Cancelled : customer cancels
+Delivered --> [*]
+Cancelled --> [*]
+@enduml

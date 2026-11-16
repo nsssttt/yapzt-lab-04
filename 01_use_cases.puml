@@ -1,0 +1,27 @@
+@startuml
+left to right direction
+actor Customer as Customer
+actor Administrator as Admin
+actor "Payment provider" as Payment
+rectangle "Online shop" {
+  usecase "Register and manage profile" as UCProfile
+  usecase "Browse products" as UCBrowse
+  usecase "Manage cart" as UCCart
+  usecase "Place order" as UCPlace
+  usecase "Pay for order" as UCPay
+  usecase "Track order" as UCTrack
+  usecase "Manage customers" as UCManageCustomers
+  usecase "Manage products" as UCManageProducts
+  usecase "Update order status" as UCStatus
+}
+Customer --> UCProfile
+Customer --> UCBrowse
+Customer --> UCCart
+Customer --> UCPlace
+Customer --> UCTrack
+UCPlace .> UCPay : <<include>>
+Payment --> UCPay
+Admin --> UCManageCustomers
+Admin --> UCManageProducts
+Admin --> UCStatus
+@enduml

@@ -1,0 +1,62 @@
+@startuml
+skinparam classAttributeIconSize 0
+class Customer {
+  +customerId: UUID
+  +name: String
+  +email: String
+  +updateProfile()
+}
+class Administrator {
+  +changeOrderStatus(orderId, status)
+  +manageCustomer(customerId)
+}
+class Product {
+  +productId: UUID
+  +name: String
+  +price: Decimal
+  +stockQuantity: int
+}
+class Cart {
+  +addProduct(product, quantity)
+  +removeProduct(product)
+  +updateQuantity(product, quantity)
+}
+class CartItem {
+  +quantity: int
+  +unitPrice: Decimal
+}
+class Order {
+  +orderId: UUID
+  +createdAt: DateTime
+  +status: OrderStatus
+  +total(): Decimal
+}
+class OrderItem {
+  +quantity: int
+  +unitPrice: Decimal
+}
+class Payment {
+  +paymentId: UUID
+  +amount: Decimal
+  +status: PaymentStatus
+}
+class OrderService {
+  +placeOrder(customer, cart)
+  +updateStatus(order, status)
+}
+interface PaymentGateway {
+  +charge(amount)
+  +refund(paymentId)
+}
+Customer "1" -- "1" Cart
+Cart "1" *-- "0..*" CartItem
+CartItem "*" --> "1" Product
+Customer "1" -- "0..*" Order
+Order "1" *-- "1..*" OrderItem
+OrderItem "*" --> "1" Product
+Order "1" -- "0..*" Payment
+OrderService ..> Order
+OrderService ..> PaymentGateway
+Payment ..> PaymentGateway
+Administrator ..> OrderService
+@enduml

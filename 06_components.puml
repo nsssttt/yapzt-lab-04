@@ -1,0 +1,23 @@
+@startuml
+actor Customer
+actor Administrator
+component "Web client" as Web
+component "Customer service" as Customers
+component "Catalog and cart service" as Catalog
+component "Order service" as Orders
+component "Payment adapter" as PayAdapter
+component "Inventory service" as Inventory
+database "Shop database" as DB
+cloud "External payment provider" as Gateway
+Customer --> Web
+Administrator --> Web
+Web --> Customers
+Web --> Catalog
+Web --> Orders
+Customers --> DB
+Catalog --> DB
+Orders --> DB
+Orders --> Inventory
+Orders --> PayAdapter
+PayAdapter --> Gateway
+@enduml

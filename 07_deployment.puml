@@ -1,0 +1,21 @@
+@startuml
+node "Customer device" as Device {
+  artifact "Web browser" as Browser
+}
+node "Application host" as AppHost {
+  artifact "Web client" as Web
+  artifact "Shop API" as API
+  artifact "Order and catalog services" as Services
+}
+database "Database host" as DBHost {
+  artifact "Shop database" as DB
+}
+cloud "Payment provider" as PayHost {
+  artifact "Payment API" as PayAPI
+}
+Browser --> Web : HTTPS
+Web --> API : HTTPS
+API --> Services : internal API
+Services --> DB : TLS database connection
+Services --> PayAPI : HTTPS
+@enduml

@@ -1,0 +1,26 @@
+@startuml
+start
+:Customer reviews cart;
+if (Cart contains items?) then (yes)
+  :Validate product stock;
+  if (All items available?) then (yes)
+    :Create pending order;
+    :Reserve products;
+    :Send payment request;
+    if (Payment approved?) then (yes)
+      :Set order status to Paid;
+      :Send confirmation;
+    else (no)
+      :Release reserved products;
+      :Set order status to PaymentFailed;
+      :Offer payment retry;
+    endif
+  else (no)
+    :Show unavailable products;
+    :Customer edits cart;
+  endif
+else (no)
+  :Ask customer to add a product;
+endif
+stop
+@enduml

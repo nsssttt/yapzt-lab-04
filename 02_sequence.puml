@@ -1,0 +1,37 @@
+@startuml
+actor Customer
+participant "Web browser" as Browser
+participant "Order service" as Orders
+participant "Inventory" as Stock
+participant "Payment provider" as Payment
+database "Shop database" as DB
+Customer -> Browser : Submit cart
+Browser -> Orders : createOrder(cart, customer)
+Orders -> Orders : Validate cart
+alt Cart is empty
+  Orders --> Browser : Show validation error
+  Browser --> Customer : Ask customer to add a product
+else Cart contains items
+  Orders -> Stock : reserve(items)
+  alt Stock unavailable
+    Stock --> Orders : rejected
+    Orders --> Browser : Show unavailable products
+    Browser --> Customer : Offer cart changes
+  else Items reserved
+    Orders -> DB : Save pending order
+    Orders -> Payment : charge(total)
+    alt Payment approved
+      Payment --> Orders : approved
+      Orders -> DB : Set status to Paid
+      Orders --> Browser : Order confirmation
+      Browser --> Customer : Show order number
+    else Payment declined
+      Payment --> Orders : declined
+      Orders -> Stock : release(items)
+      Orders -> DB : Set status to PaymentFailed
+      Orders --> Browser : Payment error
+      Browser --> Customer : Offer retry
+    end
+  end
+end
+@enduml
